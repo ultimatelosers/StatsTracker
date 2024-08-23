@@ -1,0 +1,46 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+/dist
+/build
+
+# Local environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs/
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Coverage and testing
+coverage/
+*.lcov
+
+# NPM and Yarn lock files (uncomment if you want to ignore them)
+# package-lock.json
+# yarn.lock
+
+# Temporary files
+*.tmp
+*.temp
+
+# Netlify-specific
+netlify.toml
+netlify.cache/
+
+# Local Netlify folder
+.netlify

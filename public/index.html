@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Form</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">Player Stats</div>
+        <ul class="navbar-links" id="navbarLinks">
+            <li><a href="#" id="formLink">Home</a></li>
+            <li><a href="#" id="statsLink">See Stats</a></li>
+        </ul>
+        <div class="navbar-toggle" id="navbarToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Main Content Section -->
+    <div id="mainContent">
+        <div class="container">
+            <h1>Player Stats Form</h1>
+            <form id="playerForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="attack">Attack:</label>
+                <input type="text" id="attack" name="attack" required>
+
+                <label for="medals">Medals:</label>
+                <input type="text" id="medals" name="medals" required>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table for Player Stats (Hidden initially) -->
+    <div id="statsSection" class="container" style="display: none;">
+        <h1>Player Stats</h1>
+        <table id="statsTable">
+            <thead>
+                <tr>
+                    <th data-column="Name">Name</th>
+                     <th data-column="Attack">Attack</th>
+                     <th data-column="Medals">Medals</th>
+                     <th data-column="Date">Date</th>
+                     <th data-column="Ratio">Ratio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic data will be rendered here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="js/form-handler.js"></script>
+</body>
+
+</html>
