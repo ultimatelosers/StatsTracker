@@ -13,7 +13,7 @@ exports.handler = async (event) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const { name, attack, medals } = JSON.parse(event.body);
+    const { name, attack, medals, response } = JSON.parse(event.body);
     const date = new Date().toISOString();
 
     // Check if the name exists
@@ -29,22 +29,37 @@ exports.handler = async (event) => {
       };
     }
 
+    // If the name doesn't exist in the database
     if (playerNames.length === 0) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ message: 'Name not found' })
-      };
+      if (response !== 'pizza') {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ message: 'Name not found. Respond with the code word to add the name.' })
+        };
+      }
+
+      // Add the name to the players table
+      const { error: insertPlayerError } = await supabase
+        .from('players')
+        .insert([{ name }]);
+
+      if (insertPlayerError) {
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ message: 'Error inserting name into players', error: insertPlayerError.message })
+        };
+      }
     }
 
     // Insert data into player_stats
-    const { error: insertError } = await supabase
+    const { error: insertStatsError } = await supabase
       .from('player_stats')
       .insert([{ name, attack, medals, created_at: date }]);
 
-    if (insertError) {
+    if (insertStatsError) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: 'Error inserting data', error: insertError.message })
+        body: JSON.stringify({ message: 'Error inserting data', error: insertStatsError.message })
       };
     }
 

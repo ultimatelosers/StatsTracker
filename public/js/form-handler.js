@@ -143,3 +143,43 @@ function getMostRecentPlayerStats(playerData) {
 
 // Fetch player stats initially
 fetchPlayerStats();
+
+// ------- FORM SUBMISSION LOGIC -------
+document.getElementById('submitForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const attack = document.getElementById('attack').value;
+    const medals = document.getElementById('medals').value;
+    let response = ''; // Default empty response
+
+    const formData = { name, attack, medals, response };
+
+    try {
+        let submitResponse = await fetch('/.netlify/functions/submit-form', {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        });
+
+        let result = await submitResponse.json();
+
+        if (result.message === 'Name not found. Respond with the code word to add the name.') {
+            // Ask the user for confirmation
+            if (confirm('Name not found. Do you want to add this name? If yes, type the code word.')) {
+                formData.response = 'pizza';
+
+                // Resubmit the form with "pizza" confirmation
+                submitResponse = await fetch('/.netlify/functions/submit-form', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+
+                result = await submitResponse.json();
+            }
+        }
+
+        alert(result.message);
+    } catch (error) {
+        console.error('Error submitting form:', error);
+    }
+});
