@@ -32,22 +32,15 @@ exports.handler = async (event) => {
     if (playerNames.length === 0) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Name not found, type "pizza" to add the player.' })
+        body: JSON.stringify({ message: 'Name not found, type the password to add the player.' })
       };
     }
 
-    if (promptResponse && promptResponse.toLowerCase() === 'pizza') {
-      // Insert the new player
-      const { error: insertError } = await supabase
-        .from('players')
-        .insert([{ name, created_at: date }]);
-      
-      if (insertError) {
-        return {
+    if (promptResponse && promptResponse.toLowerCase() != 'pizza') {
+      return {
           statusCode: 500,
-          body: JSON.stringify({ message: 'Error inserting new player data', error: insertError.message })
-        };
-      }
+          body: JSON.stringify({ message: 'go awaay.', error: insertError.message })
+        };      
     }
 
     // Insert player stats

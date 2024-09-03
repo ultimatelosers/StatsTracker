@@ -53,15 +53,15 @@ function renderStatsTable(playerData) {
         const row = document.createElement('tr');
 
         const nameCell = document.createElement('td');
-        nameCell.textContent = player.Name || 'N/A';
+        nameCell.textContent = player.name || 'N/A';
         row.appendChild(nameCell);
 
         const attackCell = document.createElement('td');
-        attackCell.textContent = player.Attack || 'N/A';
+        attackCell.textContent = player.attack || 'N/A';
         row.appendChild(attackCell);
 
         const medalsCell = document.createElement('td');
-        medalsCell.textContent = player.Medals || 'N/A';
+        medalsCell.textContent = player.medals || 'N/A';
         row.appendChild(medalsCell);
 
         const dateCell = document.createElement('td');
@@ -70,8 +70,8 @@ function renderStatsTable(playerData) {
         row.appendChild(dateCell);
 
         const ratioCell = document.createElement('td');
-        const attackValue = parseInt(player.Attack, 10);
-        const medalsValue = parseInt(player.Medals, 10);
+        const attackValue = parseInt(player.attack, 10);
+        const medalsValue = parseInt(player.medals, 10);
 
         if (!isNaN(attackValue) && !isNaN(medalsValue) && medalsValue !== 0) {
           const ratio = Math.floor(attackValue / medalsValue);
@@ -129,8 +129,8 @@ function getMostRecentPlayerStats(playerData) {
     const playerMap = {};
 
     playerData.forEach(player => {
-        const playerName = player.Name;
-        const playerDate = new Date(player.Date);
+        const playerName = player.name;
+        const playerDate = new Date(player.created_at);
 
         // If the player is not in the map or if this record is more recent, update it
         if (!playerMap[playerName] || new Date(playerMap[playerName].Date) < playerDate) {
@@ -163,7 +163,7 @@ document.getElementById('playerForm').addEventListener('submit', async (event) =
   
       const result = await response.json();
   
-      if (result.message === 'Name not found, type "pizza" to add the player.') {
+      if (result.message === 'Name not found, type the password to add the player.') {
         // Prompt the user for input
         const userResponse = prompt(result.message);
   
