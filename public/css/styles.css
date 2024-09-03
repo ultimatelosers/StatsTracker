@@ -161,45 +161,84 @@ button:active {
     .navbar-toggle {
         display: flex;
     }
+
+    table {
+        display: block;
+        overflow-x: auto; /* Allow horizontal scrolling on smaller screens */
+        -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on touch devices */
+    }
+
+    th, td {
+        display: block;
+        text-align: right;
+    }
+
+    th {
+        background-color: #f9f9f9; /* Maintain header background color */
+    }
+
+    td {
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding-left: 50%; /* Add padding for the label */
+        white-space: nowrap; /* Prevent wrapping */
+    }
+
+    td::before {
+        content: attr(data-label); /* Display label in pseudo-element */
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: bold;
+        white-space: nowrap; /* Prevent wrapping */
+        background-color: #f9f9f9; /* Maintain background color */
+    }
+
+    .container {
+        padding: 20px; /* Reduce padding on smaller screens */
+        width: 100%;
+    }
+
 }
 
 /* Basic table styles */
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* Ensures columns are sized consistently */
+    table-layout: auto; /* Allows columns to size dynamically based on content */
+    margin-bottom: 20px; /* Add space below the table */
 }
 
 th, td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    word-wrap: break-word; /* Handle long text gracefully */
 }
 
 th {
     cursor: pointer;
     position: relative; /* For sorting indicators */
-    display: table-cell; /* Ensure headers display as table cells */
-    text-align: left; /* Align text to the left */
     background-color: #f9f9f9; /* Light background for headers */
     font-weight: bold;
     padding: 12px; /* Add padding for better spacing */
     border-bottom: 2px solid #ddd; /* Add a bottom border for visual separation */
+    text-overflow: ellipsis; /* Handle overflow text in headers */
+    white-space: nowrap; /* Prevent header text from wrapping */
+    overflow: hidden; /* Hide overflow text in headers */
 }
 
 th.sorted-asc::after {
     content: "▲"; /* Arrow up */
     font-size: 0.8em;
     margin-left: 5px; /* Space between text and arrow */
-    margin-right: 5px; /* Space between text and arrow */
-    
 }
 
 th.sorted-desc::after {
     content: "▼"; /* Arrow down */
     font-size: 0.8em;
     margin-left: 5px; /* Space between text and arrow */
-    margin-right: 5px; /* Space between text and arrow */
 }
 
 th.sorted-asc, th.sorted-desc {
@@ -212,7 +251,8 @@ th.sorted-asc, th.sorted-desc {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 40px;
-    max-width: 400px;
+    max-width: 1000px; /* Increase max-width for larger screens */
     width: 100%;
     margin: auto;
+    box-sizing: border-box; /* Ensure padding and border are included in width */
 }
