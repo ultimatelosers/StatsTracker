@@ -30,7 +30,6 @@ exports.handler = async (event) => {
     }
 
     if (playerNames.length === 0) {
-      // If player name is not found, return message prompting user
       return {
         statusCode: 200,
         body: JSON.stringify({ message: 'Name not found, type "pizza" to add the player.' })
@@ -38,7 +37,7 @@ exports.handler = async (event) => {
     }
 
     if (promptResponse && promptResponse.toLowerCase() === 'pizza') {
-      // Insert the new player data if the user typed "pizza"
+      // Insert the new player
       const { error: insertError } = await supabase
         .from('players')
         .insert([{ name, created_at: date }]);
@@ -51,7 +50,7 @@ exports.handler = async (event) => {
       }
     }
 
-    // Insert stats into player_stats
+    // Insert player stats
     const { error: insertStatsError } = await supabase
       .from('player_stats')
       .insert([{ name, attack, medals, created_at: date }]);
@@ -65,7 +64,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Success' })
+      body: JSON.stringify({ message: 'Success', createdAt: date })
     };
   } catch (error) {
     return {

@@ -65,7 +65,7 @@ function renderStatsTable(playerData) {
         row.appendChild(medalsCell);
 
         const dateCell = document.createElement('td');
-        const parsedDate = new Date(player.Date);
+        const parsedDate = new Date(player.created_at); // Using created_at instead of Date
         dateCell.textContent = !isNaN(parsedDate) ? parsedDate.toLocaleString() : 'Invalid Date';
         row.appendChild(dateCell);
 
@@ -74,10 +74,10 @@ function renderStatsTable(playerData) {
         const medalsValue = parseInt(player.Medals, 10);
 
         if (!isNaN(attackValue) && !isNaN(medalsValue) && medalsValue !== 0) {
-            const ratio = Math.floor(attackValue / medalsValue);
-            ratioCell.textContent = ratio;
+          const ratio = Math.floor(attackValue / medalsValue);
+          ratioCell.textContent = ratio;
         } else {
-            ratioCell.textContent = 'N/A';
+          ratioCell.textContent = 'N/A';
         }
         row.appendChild(ratioCell);
 
