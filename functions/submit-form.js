@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -9,25 +8,45 @@ exports.handler = async (event) => {
     };
   }
 
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   try {
     const { name, attack, medals } = JSON.parse(event.body);
     const date = new Date().toISOString();
-    const playersFilePath = path.resolve(__dirname, '../public/data/players.txt');
-    const statsFilePath = path.resolve(__dirname, '../public/data/playerstats.csv');
-  
-    const playersData = fs.readFileSync(playersFilePath, 'utf-8');
-    const playerNames = playersData.split('\n').map(line => line.trim());
-    
+
     // Check if the name exists
-    if (!playerNames.includes(name)) {
+    const { data: playerNames, error: fetchError } = await supabase
+      .from('players')
+      .select('name')
+      .eq('name', name);
+
+    if (fetchError) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: 'Error fetching data', error: fetchError.message })
+      };
+    }
+
+    if (playerNames.length === 0) {
       return {
         statusCode: 404,
         body: JSON.stringify({ message: 'Name not found' })
       };
     }
 
-    // Append to CSV
-    fs.appendFileSync(statsFilePath, `${name},${attack},${medals},${date}\n`);
+    // Insert data into player_stats
+    const { error: insertError } = await supabase
+      .from('player_stats')
+      .insert([{ name, attack, medals, created_at: date }]);
+
+    if (insertError) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: 'Error inserting data', error: insertError.message })
+      };
+    }
 
     return {
       statusCode: 200,

@@ -1,40 +1,38 @@
-const fs = require('fs');
-const path = require('path');
-
-// Helper function to parse CSV
-function parseCSV(csvText) {
-    const rows = csvText.split('\n').filter(Boolean);
-    const headers = rows[0].split(',');
-
-    return rows.slice(1).map(row => {
-        const values = row.split(',');
-        const player = {};
-        headers.forEach((header, index) => {
-            player[header.trim()] = values[index].trim();
-        });
-        return player;
-    });
-}
+const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async function(event, context) {
-    try {
-        // Path to the CSV file (adjust path based on your project structure)
-        const filePath = path.resolve(__dirname, '../public/data/playerstats.csv');
-        const csvData = fs.readFileSync(filePath, 'utf8');
-        const playerData = parseCSV(csvData);
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(playerData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-    } catch (error) {
-        console.error('Error reading CSV file:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'Error reading CSV file' }),
-        };
+  try {
+    // Fetch data from Supabase
+    const { data: playerData, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .order('created_at', { ascending: false }); // Optional: Order by date
+
+    if (error) {
+      console.error('Error fetching data from Supabase:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: 'Error fetching data from Supabase' }),
+      };
     }
+
+    // Return data in JSON format
+    return {
+      statusCode: 200,
+      body: JSON.stringify(playerData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Internal Server Error' }),
+    };
+  }
 };
