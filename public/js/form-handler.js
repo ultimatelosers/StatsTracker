@@ -144,42 +144,48 @@ function getMostRecentPlayerStats(playerData) {
 // Fetch player stats initially
 fetchPlayerStats();
 
-// ------- FORM SUBMISSION LOGIC -------
-document.getElementById('submitForm').addEventListener('submit', async (event) => {
+document.getElementById('playerForm').addEventListener('submit', async (event) => {
     event.preventDefault();
-
+  
     const name = document.getElementById('name').value;
     const attack = document.getElementById('attack').value;
     const medals = document.getElementById('medals').value;
-    let response = ''; // Default empty response
-
-    const formData = { name, attack, medals, response };
-
+  
     try {
-        let submitResponse = await fetch('/.netlify/functions/submit-form', {
+      // Initial submit request
+      const response = await fetch('/.netlify/functions/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, attack, medals }),
+      });
+  
+      const result = await response.json();
+  
+      if (result.message === 'Name not found, type "pizza" to add the player.') {
+        // Prompt the user for input
+        const userResponse = prompt(result.message);
+  
+        if (userResponse.toLowerCase() === 'pizza') {
+          // Resubmit with the user's response
+          const response = await fetch('/.netlify/functions/submit-form', {
             method: 'POST',
-            body: JSON.stringify(formData)
-        });
-
-        let result = await submitResponse.json();
-
-        if (result.message === 'Name not found. Respond with the code word to add the name.') {
-            // Ask the user for confirmation
-            if (confirm('Name not found. Do you want to add this name? If yes, type the code word.')) {
-                formData.response = 'pizza';
-
-                // Resubmit the form with "pizza" confirmation
-                submitResponse = await fetch('/.netlify/functions/submit-form', {
-                    method: 'POST',
-                    body: JSON.stringify(formData)
-                });
-
-                result = await submitResponse.json();
-            }
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, attack, medals, promptResponse: 'pizza' }),
+          });
+  
+          const finalResult = await response.json();
+          alert(finalResult.message);
         }
-
+      } else {
         alert(result.message);
+      }
     } catch (error) {
-        console.error('Error submitting form:', error);
+      console.error('Error:', error);
+      alert('Error submitting form');
     }
-});
+  });
+  

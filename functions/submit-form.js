@@ -13,7 +13,7 @@ exports.handler = async (event) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const { name, attack, medals, response } = JSON.parse(event.body);
+    const { name, attack, medals, promptResponse } = JSON.parse(event.body);
     const date = new Date().toISOString();
 
     // Check if the name exists
@@ -29,29 +29,29 @@ exports.handler = async (event) => {
       };
     }
 
-    // If the name doesn't exist in the database
     if (playerNames.length === 0) {
-      if (response !== 'pizza') {
-        return {
-          statusCode: 400,
-          body: JSON.stringify({ message: 'Name not found. Respond with the code word to add the name.' })
-        };
-      }
+      // If player name is not found, return message prompting user
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Name not found, type "pizza" to add the player.' })
+      };
+    }
 
-      // Add the name to the players table
-      const { error: insertPlayerError } = await supabase
+    if (promptResponse && promptResponse.toLowerCase() === 'pizza') {
+      // Insert the new player data if the user typed "pizza"
+      const { error: insertError } = await supabase
         .from('players')
-        .insert([{ name }]);
-
-      if (insertPlayerError) {
+        .insert([{ name, created_at: date }]);
+      
+      if (insertError) {
         return {
           statusCode: 500,
-          body: JSON.stringify({ message: 'Error inserting name into players', error: insertPlayerError.message })
+          body: JSON.stringify({ message: 'Error inserting new player data', error: insertError.message })
         };
       }
     }
 
-    // Insert data into player_stats
+    // Insert stats into player_stats
     const { error: insertStatsError } = await supabase
       .from('player_stats')
       .insert([{ name, attack, medals, created_at: date }]);
@@ -59,7 +59,7 @@ exports.handler = async (event) => {
     if (insertStatsError) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: 'Error inserting data', error: insertStatsError.message })
+        body: JSON.stringify({ message: 'Error inserting player stats', error: insertStatsError.message })
       };
     }
 
