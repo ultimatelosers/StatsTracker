@@ -28,15 +28,15 @@
     <div id="mainContent">
         <div class="container">
             <h1>Player Stats Form</h1>
-            <form id="playerForm">
+            <form id="submitForm">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
 
                 <label for="attack">Attack:</label>
-                <input type="text" id="attack" name="attack" required>
+                <input type="number" id="attack" name="attack" required min="0" step="1">
 
                 <label for="medals">Medals:</label>
-                <input type="text" id="medals" name="medals" required>
+                <input type="number" id="medals" name="medals" required min="0" step="1">
 
                 <button type="submit">Submit</button>
             </form>
@@ -50,10 +50,10 @@
             <thead>
                 <tr>
                     <th data-column="Name">Name</th>
-                     <th data-column="Attack">Attack</th>
-                     <th data-column="Medals">Medals</th>
-                     <th data-column="Date">Date</th>
-                     <th data-column="Ratio">Ratio</th>
+                    <th data-column="Attack">Attack</th>
+                    <th data-column="Medals">Medals</th>
+                    <th data-column="Date">Date</th>
+                    <th data-column="Ratio">Ratio</th>
                 </tr>
             </thead>
             <tbody>
