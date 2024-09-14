@@ -162,47 +162,62 @@ button:active {
         display: flex;
     }
 
+/* Styles for mobile screens */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background-color: #333;
+    }
+
+    .navbar-links.show {
+        display: flex;
+    }
+
+    .navbar-toggle {
+        display: flex;
+    }
+
+    /* Table container for scrollable table */
+    .container {
+        overflow-x: auto; /* Allow horizontal scrolling */
+        overflow-y: auto; /* Allow vertical scrolling */
+        width: 100%; /* Ensure the container takes full width */
+    }
+
     table {
+        max-height: 80vh; /* Set height relative to viewport (50% of screen height) */
         display: block;
-        overflow-x: auto; /* Allow horizontal scrolling on smaller screens */
-        -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on touch devices */
+        width: 100%; /* Keep full width */
+        border-collapse: collapse;
+        overflow-x: auto; /* Allow horizontal scrolling */
+        white-space: nowrap; /* Prevent text wrapping in cells */
     }
 
     th, td {
-        display: block;
-        text-align: right;
+        text-align: left; /* Maintain normal alignment */
+        white-space: nowrap; /* Prevent text wrapping inside cells */
     }
 
-    th {
-        background-color: #f9f9f9; /* Maintain header background color */
-    }
-
-    td {
-        border-bottom: 1px solid #ddd;
-        position: relative;
-        padding-left: 50%; /* Add padding for the label */
-        white-space: nowrap; /* Prevent wrapping */
-    }
-
+    /* Remove td::before on small screens to prevent interference */
     td::before {
-        content: attr(data-label); /* Display label in pseudo-element */
-        position: absolute;
-        left: 0;
-        width: 45%;
-        padding-left: 10px;
-        font-weight: bold;
-        white-space: nowrap; /* Prevent wrapping */
-        background-color: #f9f9f9; /* Maintain background color */
+        display: none; /* Disable the pseudo-element for mobile */
     }
-
-    .container {
-        padding: 20px; /* Reduce padding on smaller screens */
-        width: 100%;
-    }
-
 }
 
 /* Basic table styles */
+.table-container {
+    max-height: 70vh; /* 70% of the viewport height for larger screens */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    overflow-y: auto; /* Allow vertical scrolling */
+    width: 100%; /* Ensure the container takes full width */
+    margin-bottom: 20px; /* Add space below the container */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
