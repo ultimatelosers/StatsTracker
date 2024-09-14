@@ -142,25 +142,6 @@ button:active {
     transition: 0.3s;
 }
 
-/* Styles for mobile screens */
-@media (max-width: 768px) {
-    .navbar-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        background-color: #333;
-    }
-
-    .navbar-links.show {
-        display: flex;
-    }
-
-    .navbar-toggle {
-        display: flex;
-    }
 
 /* Styles for mobile screens */
 @media (max-width: 768px) {
@@ -230,6 +211,14 @@ th, td {
     text-align: left;
     border-bottom: 1px solid #ddd;
     word-wrap: break-word; /* Handle long text gracefully */
+}
+
+/* Sticky header */
+thead th {
+    position: sticky;
+    top: 0; /* Sticks the header to the top */
+    z-index: 1; /* Ensures the header stays on top of the content */
+    background-color: #f9f9f9; /* Maintain header background color */
 }
 
 th {
